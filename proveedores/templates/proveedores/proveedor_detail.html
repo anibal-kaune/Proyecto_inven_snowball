@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle del Proveedor</h2>
+    <p><strong>Nombre:</strong> {{ proveedor.nombre }}</p>
+    <p><strong>RUT Empresa:</strong> {{ proveedor.rut_empresa }}</p>
+    <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+    <p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+    <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
+    <a class="btn btn-secondary" href="{% url 'proveedor_list' %}">Volver</a>
+</div>
+{% endblock %}
