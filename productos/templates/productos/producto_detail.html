@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle del Producto</h2>
+    <p><strong>Código:</strong> {{ producto.codigo }}</p>
+    <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
+    <p><strong>Precio venta:</strong> ${{ producto.precio_venta }}</p>
+    <p><strong>Precio compra:</strong> ${{ producto.precio_compra }}</p>
+    <p><strong>Stock mínimo:</strong> {{ producto.cantidad_minima }}</p>
+    <p><strong>Marca:</strong> {{ producto.marca }}</p>
+    <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
+    <a class="btn btn-secondary" href="{% url 'producto_list' %}">Volver</a>
+</div>
+{% endblock %}
