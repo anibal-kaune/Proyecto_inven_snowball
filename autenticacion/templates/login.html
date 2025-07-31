@@ -19,6 +19,11 @@
                             <div class="alert alert-danger">{{ message }}</div>
                         {% endfor %}
                     {% endif %}
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    {% endif %}
                     <form method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
