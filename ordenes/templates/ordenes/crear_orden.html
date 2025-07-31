@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Crear Orden de Compra</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table table-bordered" id="tabla-productos">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="productos-body">
+                <tr>
+                    <td>
+                        <select name="producto" class="form-control producto-select" required>
+                            <option value="">-- Seleccione --</option>
+                            {% for p in productos %}
+                                <option value="{{ p.id }}">{{ p.codigo }} - {{ p.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="number" name="cantidad" class="form-control" min="1" required></td>
+                    <td><button type="button" class="btn btn-danger btn-sm eliminar-fila">Eliminar</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" id="agregar-fila" class="btn btn-secondary">+ Agregar Producto</button>
+        <button type="submit" class="btn btn-primary">Guardar Orden</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tablaBody = document.getElementById('productos-body');
+    const botonAgregar = document.getElementById('agregar-fila');
+
+    function crearFilaProducto() {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>
+                <select name="producto" class="form-control producto-select" required>
+                    <option value="">-- Seleccione --</option>
+                    {% for p in productos %}
+                        <option value="{{ p.id }}">{{ p.codigo }} - {{ p.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="number" name="cantidad" class="form-control" min="1" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm eliminar-fila">Eliminar</button></td>
+        `;
+        tablaBody.appendChild(fila);
+    }
+
+    botonAgregar.addEventListener('click', function () {
+        crearFilaProducto();
+    });
+
+    tablaBody.addEventListener('click', function (e) {
+        if (e.target.classList.contains('eliminar-fila')) {
+            const fila = e.target.closest('tr');
+            if (tablaBody.rows.length > 1) {
+                fila.remove();
+            }
+        }
+    });
+
+    // Validar que no se repita el producto
+    tablaBody.addEventListener('change', function (e) {
+        if (e.target.name === 'producto') {
+            const valores = [];
+            const selects = document.querySelectorAll('.producto-select');
+            selects.forEach(s => {
+                if (s.value) valores.push(s.value);
+            });
+            const duplicados = valores.filter((v, i, a) => a.indexOf(v) !== i);
+            if (duplicados.length > 0) {
+                alert('No puede seleccionar el mismo producto más de una vez.');
+                e.target.value = "";
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
