@@ -16,7 +16,7 @@ class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     precio_venta = models.DecimalField(max_digits=10, decimal_places=2)
     precio_compra = models.DecimalField(max_digits=10, decimal_places=2)
-    descripcion = models.TextField(blank=True)
+    descripcion = models.TextField(max_length=200, null=True, blank=True)
     cantidad_minima = models.PositiveIntegerField()
     stock = models.IntegerField(default=0)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)

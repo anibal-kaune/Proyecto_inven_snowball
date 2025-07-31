@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Producto, Marca
-from proveedores.models import Proveedor
+from .models import Producto, Marca, Proveedor
+#from proveedores.models import Proveedor
 from .forms import ProductoForm, MarcaForm
 
 #Vistas producto
@@ -24,6 +24,8 @@ def producto_detail(request, pk):
 
 def producto_create(request):
     proveedores = Proveedor.objects.all()
+    marcas = Marca.objects.all()  
+
     if request.method == 'POST':
         Producto.objects.create(
             codigo=request.POST['codigo'],
@@ -33,11 +35,15 @@ def producto_create(request):
             descripcion=request.POST['descripcion'],
             cantidad_minima=request.POST['cantidad_minima'],
             stock=request.POST['stock'],
-            marca=request.POST['marca'],
+            marca_id=request.POST['marca'],  
             proveedor_id=request.POST['proveedor']
         )
-        return redirect('producto_list')
-    return render(request, 'productos/producto_form.html', {'proveedores': proveedores})
+        return redirect('listar_productos')  
+
+    return render(request, 'productos/producto_form.html', {
+        'proveedores': proveedores,
+        'marcas': marcas,
+    })
 
 def producto_update(request, pk):
     producto = get_object_or_404(Producto, pk=pk)

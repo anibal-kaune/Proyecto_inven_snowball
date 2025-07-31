@@ -25,7 +25,7 @@
             <input type="text" name="telefono" value="{{ proveedor.telefono|default:'' }}" class="form-control" required>
         </div>
         <button class="btn btn-primary" type="submit">Guardar</button>
-        <a href="{% url 'listar_proveedores' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'proveedor_list' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 {% endblock %}

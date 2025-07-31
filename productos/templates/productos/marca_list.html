@@ -6,7 +6,7 @@
     <table class="table table-bordered">
         <thead><tr><th>Nombre</th><th>Acciones</th></tr></thead>
         <tbody>
-            {% for m in marcas %}
+            {% for m in marca %}
             <tr>
                 <td>{{ m.nombre }}</td>
                 <td>{{ m.proveedor.nombre|default:"Sin proveedor" }}</td>

@@ -11,12 +11,9 @@
         <div class="mb-3">
             <label>Proveedor (opcional)</label>
             <select name="proveedor" class="form-control">
-                <option value="">-- Sin proveedor --</option>
+                <option value="">Sin proveedor</option>
                 {% for proveedor in proveedores %}
-                    <option value="{{ proveedor.id }}"
-                    {% if marca and marca.proveedor and marca.proveedor.id == proveedor.id %}selected{% endif %}>
-                        {{ proveedor.nombre }}
-                    </option>
+                    <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
                 {% endfor %}
             </select>
         </div>
