@@ -137,6 +137,7 @@ def editar_marca(request, id):
         marca.save()
         return redirect('listar_marcas')
     return render(request, 'productos/marca_editar.html', {'marca': marca, 'proveedores': proveedores})
+
 def eliminar_marca(request, id):
     marca = get_object_or_404(Marca, id=id)
     if request.method == 'POST':

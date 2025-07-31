@@ -9,8 +9,8 @@ urlpatterns = [
     path('editar/<int:id>/', views.editar_producto, name='editar_producto'),
     path('eliminar/<int:id>/', views.eliminar_producto, name='eliminar_producto'),
     #marca
-    path('marcas/', views.marca_list, name='listar_marcas'),
-    path('marcas/crear/', views.crear_marca, name='crear_marca'),
-    path('marcas/editar/<int:id>/', views.editar_marca, name='editar_marca'),
-    path('marcas/eliminar/<int:id>/', views.eliminar_marca, name='eliminar_marca'),
+    path('marca/', views.marca_list, name='listar_marcas'),
+    path('marca/crear/', views.crear_marca, name='crear_marca'),
+    path('marca/editar/<int:id>/', views.editar_marca, name='editar_marca'),
+    path('marca/eliminar/<int:id>/', views.eliminar_marca, name='eliminar_marca'),
 ]

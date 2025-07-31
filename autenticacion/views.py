@@ -21,16 +21,19 @@ def registrar_usuario(request):
     return render(request, 'registro.html', {'form': form})
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
-        if user is not None:
+        if user:
             login(request, user)
             return redirect('index')
         else:
-            return render(request, 'autenticacion/login.html', {'error': 'Credenciales incorrectas'})
-    return render(request, 'autenticacion/login.html')
+            return render(request, 'login.html', {'error': 'Credenciales incorrectas'})
+    return render(request, 'login.html')
 
 
 @login_required

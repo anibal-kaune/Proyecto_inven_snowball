@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if usuario %}Editar{% else %}Crear{% endif %} Usuario</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>RUT</label>
+            <input type="text" name="rut" value="{{ usuario.rut|default:'' }}" class="form-control" {% if usuario %}readonly{% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label>Nombre</label>
+            <input type="text" name="nombre" value="{{ usuario.nombre|default:'' }}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Apellido</label>
+            <input type="text" name="apellido" value="{{ usuario.apellido|default:'' }}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ usuario.email|default:'' }}" class="form-control" {% if usuario %}readonly{% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" value="{{ usuario.telefono|default:'' }}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Rol</label>
+            <select name="rol" class="form-control">
+                <option value="colaborador" {% if usuario.rol == 'colaborador' %}selected{% endif %}>Colaborador</option>
+                <option value="supervisor" {% if usuario.rol == 'supervisor' %}selected{% endif %}>Supervisor</option>
+            </select>
+        </div>
+        {% if not usuario %}
+        <div class="mb-3">
+            <label>Contraseña</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'listar_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
