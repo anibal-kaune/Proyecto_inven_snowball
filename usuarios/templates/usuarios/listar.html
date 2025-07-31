@@ -3,27 +3,29 @@
 <div class="container mt-4">
     <h2>Usuarios registrados</h2>
     <a class="btn btn-success mb-3" href="{% url 'crear_usuario' %}">+ Nuevo Usuario</a>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Nombre</th><th>Email</th><th>RUT</th><th>Teléfono</th><th>Rol</th><th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in usuarios %}
-            <tr>
-                <td>{{ u.nombre }} {{ u.apellido }}</td>
-                <td>{{ u.email }}</td>
-                <td>{{ u.rut }}</td>
-                <td>{{ u.telefono }}</td>
-                <td>{{ u.rol }}</td>
-                <td>
-                    <a href="{% url 'editar_usuario' u.id %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url 'eliminar_usuario' u.id %}" class="btn btn-danger btn-sm">Eliminar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th><th>Email</th><th>RUT</th><th>Teléfono</th><th>Rol</th><th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.nombre }} {{ u.apellido }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.rut }}</td>
+                    <td>{{ u.telefono }}</td>
+                    <td>{{ u.rol }}</td>
+                    <td>
+                        <a href="{% url 'editar_usuario' u.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminar_usuario' u.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
