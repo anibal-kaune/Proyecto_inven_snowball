@@ -10,29 +10,32 @@ def proveedor_detail(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     return render(request, 'proveedores/proveedor_detail.html', {'proveedor': proveedor})
 
-def proveedor_create(request):
+def crear_proveedor(request):
     if request.method == 'POST':
-        form = ProveedorForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('proveedor_list')
-    else:
-        form = ProveedorForm()
-    return render(request, 'proveedores/proveedor_form.html', {'form': form})
+        Proveedor.objects.create(
+            nombre=request.POST['nombre'],
+            rut_empresa=request.POST['rut_empresa'],
+            direccion=request.POST['direccion'],
+            correo=request.POST['correo'],
+            telefono=request.POST['telefono']
+        )
+        return redirect('proveedor_list')
+    return render(request, 'proveedores/proveedor_form.html')
 
-def proveedor_update(request, pk):
-    proveedor = get_object_or_404(Proveedor, pk=pk)
+def editar_proveedor(request, id):
+    proveedor = get_object_or_404(Proveedor, id=id)
     if request.method == 'POST':
-        form = ProveedorForm(request.POST, instance=proveedor)
-        if form.is_valid():
-            form.save()
-            return redirect('proveedor_detail', pk=pk)
-    else:
-        form = ProveedorForm(instance=proveedor)
-    return render(request, 'proveedores/proveedor_form.html', {'form': form})
+        proveedor.nombre = request.POST['nombre']
+        proveedor.rut_empresa = request.POST['rut_empresa']
+        proveedor.direccion = request.POST['direccion']
+        proveedor.correo = request.POST['correo']
+        proveedor.telefono = request.POST['telefono']
+        proveedor.save()
+        return redirect('proveedor_list')
+    return render(request, 'proveedores/proveedor_editar.html', {'proveedor': proveedor})
 
-def proveedor_delete(request, pk):
-    proveedor = get_object_or_404(Proveedor, pk=pk)
+def eliminar_proveedor(request, id):
+    proveedor = get_object_or_404(Proveedor, id=id)
     if request.method == 'POST':
         proveedor.delete()
         return redirect('proveedor_list')

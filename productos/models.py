@@ -1,14 +1,8 @@
 from django.db import models
 from proveedores.models import Proveedor
 
-class Categoria(models.Model):
-    nombre = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nombre
-
 class Marca(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
     proveedor = models.ForeignKey(Proveedor,null=True,blank=True,on_delete=models.SET_NULL,related_name='marcas')
 
     def proveedor_nombre(self):

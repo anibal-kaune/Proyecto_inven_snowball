@@ -22,14 +22,16 @@ def registrar_usuario(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
             login(request, user)
             return redirect('index')
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+        else:
+            return render(request, 'autenticacion/login.html', {'error': 'Credenciales incorrectas'})
+    return render(request, 'autenticacion/login.html')
+
 
 @login_required
 def dashboard(request):
@@ -39,5 +41,6 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-def index_view(request):
+#@login_required
+def index(request):
     return render(request, 'index.html')

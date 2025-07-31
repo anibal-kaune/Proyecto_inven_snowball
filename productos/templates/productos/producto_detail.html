@@ -2,13 +2,25 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Detalle del Producto</h2>
-    <p><strong>Código:</strong> {{ producto.codigo }}</p>
-    <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
-    <p><strong>Precio venta:</strong> ${{ producto.precio_venta }}</p>
-    <p><strong>Precio compra:</strong> ${{ producto.precio_compra }}</p>
-    <p><strong>Stock mínimo:</strong> {{ producto.cantidad_minima }}</p>
-    <p><strong>Marca:</strong> {{ producto.marca }}</p>
-    <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
-    <a class="btn btn-secondary" href="{% url 'producto_list' %}">Volver</a>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ producto.nombre }}</h4>
+            <p><strong>Código:</strong> {{ producto.codigo }}</p>
+            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+            <p><strong>Precio Venta:</strong> ${{ producto.precio_venta }}</p>
+            <p><strong>Precio Compra:</strong> ${{ producto.precio_compra }}</p>
+            <p><strong>Stock:</strong> {{ producto.stock }}</p>
+            <p><strong>Cantidad Mínima:</strong> {{ producto.cantidad_minima }}</p>
+            <p><strong>Marca:</strong> {{ producto.marca.nombre }}</p>
+            <p><strong>Proveedor:</strong>
+                {% if producto.proveedor %}
+                    {{ producto.proveedor.nombre }}
+                {% else %}
+                    <span class="text-muted">Sin proveedor</span>
+                {% endif %}
+            </p>
+            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
 </div>
 {% endblock %}

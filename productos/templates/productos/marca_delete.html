@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-    <h2>¿Eliminar marca?</h2>
-    <p>¿Estás seguro de eliminar la marca <strong>{{ marca.nombre }}</strong>?</p>
-    <form method="post">
+    <h2>¿Eliminar marca "{{ marca.nombre }}"?</h2>
+    <form method="POST">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-        <a href="{% url 'marca_list' %}" class="btn btn-secondary">Cancelar</a>
+        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <a href="{% url 'listar_marcas' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 {% endblock %}
