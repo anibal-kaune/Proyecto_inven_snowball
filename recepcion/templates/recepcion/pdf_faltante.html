@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 12px;
+            margin: 40px;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .orden-info {
+            margin-bottom: 20px;
+        }
+
+        .orden-info p {
+            margin: 4px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        tfoot td {
+            font-weight: bold;
+            background-color: #fafafa;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 10px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Snowball SpA</h1>
+        <h2>Reporte de Faltantes - Orden #{{ orden.numero }}</h2>
+    </header>
+
+    <section class="orden-info">
+        <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
+        <p><strong>Estado:</strong> {{ orden.estado }}</p>
+        <p><strong>Usuario:</strong> {{ orden.usuario.nombre }} {{ orden.usuario.apellido }}</p>
+        <p><strong>Rol:</strong> {{ orden.usuario.rol }}</p>
+    </section>
+
+    <h3>Productos con faltantes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Proveedor</th>
+                <th>RUT Empresa</th>
+                <th>Solicitado</th>
+                <th>Recibido</th>
+                <th>Faltantes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for faltante in faltantes %}
+            <tr>
+                <td>{{ faltante.producto.codigo }}</td>
+                <td>{{ faltante.producto.nombre }}</td>
+                <td>{{ faltante.producto.proveedor.nombre }}</td>
+                <td>{{ faltante.producto.proveedor.rut_empresa }}</td>
+                <td>{{ faltante.cantidad_solicitada }}</td>
+                <td>{{ faltante.cantidad_recibida }}</td>
+                <td>{{ faltante.cantidad_faltante }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <footer>
+        Documento generado automáticamente por el sistema Snowball SpA.
+    </footer>
+</body>
+</html>

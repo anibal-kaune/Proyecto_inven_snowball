@@ -6,6 +6,11 @@ from ordenes.models import OrdenCompra, ItemOrdenCompra
 from productos.models import Producto  # Ajusta si tu modelo está en otra app
 from usuarios.models import Usuario
 from recepcion.models import Faltante
+from django.http import HttpResponseForbidden, HttpResponse
+from xhtml2pdf import pisa
+import tempfile
+from django.template.loader import get_template
+from io import BytesIO
 
 #Recepción (pendiente)
 @login_required
@@ -110,6 +115,21 @@ def detalle_recibido(request, orden_id):
         'items': items
     })
 
+#generar PDF
+def generar_pdf_recibido(request, orden_id):
+    orden = get_object_or_404(OrdenCompra, pk=orden_id)
+    template = get_template('recepcion/pdf_recibido.html')
+    html = template.render({'orden': orden})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Orden_{orden.numero}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=500)
+    return response
+
 #faltantes
 @login_required
 def faltantes(request):
@@ -152,3 +172,21 @@ def confirmar_recepcion_faltante(request, orden_id):
         return redirect('faltantes')
 
     return redirect('detalle_faltante', orden_id=orden_id)
+
+#generar PDF
+def generar_pdf_faltante(request, orden_id):
+    orden = OrdenCompra.objects.get(numero=orden_id)
+    faltantes = Faltante.objects.filter(orden=orden)
+
+    template = get_template("recepcion/pdf_faltante.html")
+    html = template.render({"orden": orden, "faltantes": faltantes})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="reporte_faltantes_orden_{orden.numero}.pdf"'
+
+    pisa_status = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), dest=response, encoding='UTF-8')
+
+    if pisa_status.err:
+        return HttpResponse("Error al generar el PDF", status=500)
+
+    return response

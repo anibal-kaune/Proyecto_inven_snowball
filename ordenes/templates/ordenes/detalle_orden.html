@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
         <h2 style="margin: 0;">Detalle de Orden de Compra #{{ orden.numero }}</h2>
-        <a href="{% url 'generar_pdf_orden' orden.numero %}" class="btn btn-success mt-3">Descargar PDF</a>
+        <!--<a href="{% url 'generar_pdf_orden' orden.numero %}" class="btn btn-success mt-3">Descargar PDF</a>-->
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -84,7 +84,7 @@
             </tfoot>
         </table>
     </div>
-    <a href="{% url 'generar_pdf_orden' orden.numero %}" class="btn btn-success mt-3">Descargar PDF</a>
+    <a href="{% url 'generar_pdf_orden' orden.numero %}" class="btn btn-primary mt-3 me-2">Descargar PDF</a>
     <a href="{% url 'lista_ordenes' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
 </div>
 {% endblock %}

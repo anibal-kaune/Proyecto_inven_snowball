@@ -49,6 +49,7 @@
         </table>
     </div>
 
+    <a href="{% url 'generar_pdf_recibido' orden.numero %}" class="btn btn-success mt-3 me-2">Descargar PDF</a>
     <a href="{% url 'recibidos' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
 </div>
 {% endblock %}
