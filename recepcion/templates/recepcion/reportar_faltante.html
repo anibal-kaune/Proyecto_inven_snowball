@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Reportar Faltante - Orden #{{ orden.numero }}</h2>
+
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="producto" class="form-label">Producto</label>
+            <select name="producto" id="producto" class="form-select" required>
+                <option value="">Seleccione un producto</option>
+                {% for item in productos_en_orden %}
+                    <option value="{{ item.producto.id }}">{{ item.producto.nombre }} (Solicitado: {{ item.cantidad }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="cantidad_recibida" class="form-label">Cantidad Recibida</label>
+            <input type="number" name="cantidad_recibida" id="cantidad_recibida" class="form-control" min="0" required>
+        </div>
+
+        <button type="submit" class="btn btn-warning"
+                onclick="return confirm('¿Confirmas que hubo faltante en la recepción?')">Registrar Faltante</button>
+
+        <a href="{% url 'detalle_recepcion' orden.numero %}" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Órdenes Pendientes de Recepción</h2>
+    <div>
+        <div class="btn-group mt-3 mb-3" role="group" aria-label="Basic mixed styles example">
+            <a href="{% url 'recepcion' %}" class="btn btn-primary">Pendientes</a>
+            <a href="{% url 'recibidos' %}" class="btn btn-success">Recibidas</a>
+            <button type="button" class="btn btn-warning">Faltantes</button>
+        </div>
+    </div>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Número de orden</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Usuario</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for orden in ordenes %}
+                {% if orden.numero %}
+                    <tr>
+                        <td>{{ orden.numero }}</td>
+                        <td>{{ orden.fecha }}</td>
+                        <td>{{ orden.estado }}</td>
+                        <td>{{ orden.usuario.nombre }}</td>
+                        <td>
+                            <a href="{% url 'detalle_recepcion' orden.numero %}" class="btn btn-primary btn-sm">Ver Detalle</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% empty %}
+                <tr>
+                    <td colspan="5">No hay órdenes pendientes.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

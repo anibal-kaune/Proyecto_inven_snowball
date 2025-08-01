@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle Orden #{{ orden.numero }}</h2>
+
+    <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
+    <p><strong>Estado:</strong> {{ orden.estado }}</p>
+    <p><strong>Usuario:</strong> {{ orden.usuario.nombre }}</p>
+
+    <h4 class="mt-4">Productos</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <a href="{% url 'confirmar_recepcion' orden.numero %}" class="btn btn-success"
+           onclick="return confirm('¿Deseas confirmar la recepción y actualizar el stock?')">Confirmar Recepción</a>
+
+        <a href="{% url 'reportar_faltante' orden.numero %}" class="btn btn-warning">Reportar Faltante</a>
+
+        <a href="{% url 'recepcion' %}" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+{% endblock %}
