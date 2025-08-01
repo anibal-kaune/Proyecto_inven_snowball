@@ -3,6 +3,8 @@ from .models import OrdenCompra, ItemOrdenCompra
 from productos.models import Producto
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.contrib import messages
+from django.http import HttpResponseForbidden
 
 @login_required
 def lista_ordenes(request):
@@ -51,4 +53,31 @@ def crear_orden(request):
 @login_required
 def detalle_orden(request, orden_id):
     orden = get_object_or_404(OrdenCompra, numero=orden_id)
-    return render(request, 'ordenes/detalle_orden.html', {'orden': orden})
+    estados_editables = []
+    if request.user.rol == 'supervisor':
+        estados_editables = [
+            ('Emitida', 'Emitida'),
+            ('Aprobada', 'Aprobada'),
+            ('Cancelada', 'Cancelada'),
+        ]
+    return render(request, 'ordenes/detalle_orden.html', {'orden': orden, 'estados_editables': estados_editables,})
+
+@login_required
+def cambiar_estado_orden(request, orden_id):
+    orden = get_object_or_404(OrdenCompra, numero=orden_id)
+
+    if not request.user.rol == 'supervisor':  # Usamos el campo del modelo Usuario
+        return HttpResponseForbidden("No tienes permisos para cambiar el estado.")
+
+    ESTADOS_PERMITIDOS = ['Emitida', 'Aprobada', 'Cancelada']
+
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado')
+        if nuevo_estado in ESTADOS_PERMITIDOS:
+            orden.estado = nuevo_estado
+            orden.save()
+            messages.success(request, f'Estado actualizado a "{nuevo_estado}".')
+        else:
+            messages.error(request, "Estado no permitido.")
+
+    return redirect('lista_ordenes')

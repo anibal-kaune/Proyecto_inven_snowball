@@ -40,3 +40,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} ({self.rol})"
+    
+    @property
+    def es_supervisor(self):
+        return self.rol.lower() == 'supervisor'
+

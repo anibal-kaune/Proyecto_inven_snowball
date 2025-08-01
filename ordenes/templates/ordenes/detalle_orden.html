@@ -6,7 +6,21 @@
     <div class="card mb-4">
         <div class="card-body">
             <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
-            <p><strong>Estado:</strong> {{ orden.estado }}</p>
+            <div class="d-flex align-items-center">
+                <p class="me-5"><strong>Estado:</strong> {{ orden.estado }}</p>
+                {% if request.user.es_supervisor %}
+                <form method="POST" action="{% url 'cambiar_estado_orden' orden.numero %}" class="mb-3">
+                    {% csrf_token %}
+                    <label for="estado"><strong>Cambiar estado: </strong></label>
+                    <select name="estado" id="estado" class="form-select w-auto d-inline-block mx-2">
+                        {% for key, value in estados_editables %}
+                            <option value="{{ key }}" {% if orden.estado == key %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">Actualizar estado</button>
+                </form>
+                {% endif %}
+            </div>
             <p><strong>Usuario:</strong> {{ orden.usuario.nombre }} {{ orden.usuario.apellido }}</p>
             <p><strong>Rol:</strong> {{ orden.usuario.rol }}</p>
         </div>
