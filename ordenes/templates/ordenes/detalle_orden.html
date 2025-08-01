@@ -17,8 +17,30 @@
                             <option value="{{ key }}" {% if orden.estado == key %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
-                    <button type="submit" class="btn btn-sm btn-primary">Actualizar estado</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="confirmarCambioEstado()">Actualizar estado</button>
                 </form>
+                <script>
+                function confirmarCambioEstado() {
+                    const selectEstado = document.getElementById("estado");
+                    const estadoSeleccionado = selectEstado.options[selectEstado.selectedIndex].text;
+
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: `Vas a cambiar el estado a "${estadoSeleccionado}"`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, cambiar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            selectEstado.closest('form').submit();
+                        }
+                    });
+                }
+                </script>
+
                 {% endif %}
             </div>
             <p><strong>Usuario:</strong> {{ orden.usuario.nombre }} {{ orden.usuario.apellido }}</p>
