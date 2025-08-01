@@ -12,4 +12,5 @@ urlpatterns = [
 
     path('faltantes/', views.faltantes, name='faltantes'),
     path('faltantes/orden/<int:orden_id>/', views.detalle_faltante, name='detalle_faltante'),
+    path('faltantes/orden/<int:orden_id>/confirmar/', views.confirmar_recepcion_faltante, name='confirmar_recepcion_faltante'),
 ]

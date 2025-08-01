@@ -47,34 +47,46 @@ def reportar_faltante(request, orden_id):
     orden = get_object_or_404(OrdenCompra, pk=orden_id)
 
     if request.method == 'POST':
-        producto_id = request.POST.get('producto')
-        try:
-            cantidad_recibida = int(request.POST.get('cantidad_recibida'))
-        except (TypeError, ValueError):
-            messages.error(request, "Cantidad recibida inválida.")
-            return redirect('reportar_faltante', orden_id=orden.id)
+        productos_ids = request.POST.getlist('producto_id[]')
+        cantidades_recibidas = request.POST.getlist('cantidad_recibida[]')
 
-        producto = get_object_or_404(Producto, pk=producto_id)
-        item = get_object_or_404(ItemOrdenCompra, orden=orden, producto=producto)
+        productos_con_faltante = set()
 
-        if cantidad_recibida > item.cantidad:
-            messages.error(request, "La cantidad recibida no puede ser mayor que la solicitada.")
-            return redirect('reportar_faltante', orden_id=orden.id)
+        for producto_id, cant_recibida in zip(productos_ids, cantidades_recibidas):
+            producto = get_object_or_404(Producto, pk=producto_id)
+            item = get_object_or_404(ItemOrdenCompra, orden=orden, producto=producto)
 
-        faltante = Faltante.objects.create(
-            orden=orden,
-            producto=producto,
-            cantidad_solicitada=item.cantidad,
-            cantidad_recibida=cantidad_recibida,
-            reportado_por=request.user,
-            fecha_reporte=timezone.now()
-        )
+            cant_recibida = int(cant_recibida)
+            cant_solicitada = item.cantidad
+
+            if cant_recibida < cant_solicitada:
+                # Crear registro de faltante
+                Faltante.objects.create(
+                    orden=orden,
+                    producto=producto,
+                    cantidad_solicitada=cant_solicitada,
+                    cantidad_recibida=cant_recibida,
+                    reportado_por=request.user,
+                    fecha_reporte=timezone.now()
+                )
+                productos_con_faltante.add(producto.id)
+
+            # Siempre se suma lo recibido al stock
+            producto.stock += cant_recibida
+            producto.save()
+
+        # Procesar productos que no fueron reportados como faltantes (recibidos completos)
+        items_orden = ItemOrdenCompra.objects.filter(orden=orden).select_related('producto')
+        for item in items_orden:
+            if item.producto.id not in productos_con_faltante:
+                item.producto.stock += item.cantidad
+                item.producto.save()
 
         orden.estado = 'Faltante'
         orden.save()
 
-        messages.success(request, "Faltante registrado correctamente.")
-        return redirect('recepcion')
+        messages.success(request, "Faltantes registrados y stock actualizado.")
+        return redirect('faltantes')
 
     productos_en_orden = ItemOrdenCompra.objects.filter(orden=orden).select_related('producto')
     return render(request, 'recepcion/reportar_faltante.html', {
@@ -107,9 +119,36 @@ def faltantes(request):
 @login_required
 def detalle_faltante(request, orden_id):
     orden = get_object_or_404(OrdenCompra, pk=orden_id)
-    items = ItemOrdenCompra.objects.filter(orden=orden).select_related('producto')
+    faltantes = Faltante.objects.filter(orden=orden).select_related('producto', 'producto__proveedor')
+
     return render(request, 'recepcion/detalle_faltante.html', {
         'orden': orden,
-        'items': items
+        'faltantes': faltantes
     })
 
+@login_required
+def confirmar_recepcion_faltante(request, orden_id):
+    orden = get_object_or_404(OrdenCompra, pk=orden_id)
+
+    if request.method == "POST":
+        # Obtener faltantes
+        faltantes = Faltante.objects.filter(orden=orden)
+
+        # Actualizar stock por cada producto
+        for f in faltantes:
+            producto = f.producto
+            cantidad_a_sumar = f.cantidad_faltante  # Ya viene almacenada
+            producto.stock += cantidad_a_sumar
+            producto.save()
+
+        # Cambiar estado
+        orden.estado = "Recibida"
+        orden.save()
+
+        # Eliminar faltantes
+        faltantes.delete()
+
+        messages.success(request, f"La orden #{orden.numero} fue marcada como Recibida. El stock ha sido actualizado y los faltantes eliminados.")
+        return redirect('faltantes')
+
+    return redirect('detalle_faltante', orden_id=orden_id)

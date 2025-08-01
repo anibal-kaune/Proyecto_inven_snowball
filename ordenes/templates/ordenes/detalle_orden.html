@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-    <h2>Detalle de Orden de Compra #{{ orden.numero }}</h2>
-
+    <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0;">Detalle de Orden de Compra #{{ orden.numero }}</h2>
+        <a href="{% url 'generar_pdf_orden' orden.numero %}" class="btn btn-success mt-3">Descargar PDF</a>
+    </div>
     <div class="card mb-4">
         <div class="card-body">
             <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
             <div class="d-flex align-items-center">
                 <p class="me-5"><strong>Estado:</strong> {{ orden.estado }}</p>
-                {% if request.user.es_supervisor %}
+                {% if request.user.es_supervisor and orden.estado != "Recibida" %}
                 <form method="POST" action="{% url 'cambiar_estado_orden' orden.numero %}" class="mb-3">
                     {% csrf_token %}
                     <label for="estado"><strong>Cambiar estado: </strong></label>
@@ -82,7 +84,7 @@
             </tfoot>
         </table>
     </div>
-
+    <a href="{% url 'generar_pdf_orden' orden.numero %}" class="btn btn-success mt-3">Descargar PDF</a>
     <a href="{% url 'lista_ordenes' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
 </div>
 {% endblock %}

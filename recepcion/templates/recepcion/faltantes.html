@@ -29,7 +29,7 @@
                         <td>{{ orden.estado }}</td>
                         <td>{{ orden.usuario.nombre }}</td>
                         <td>
-                            <a href="{% url 'detalle_faltante' orden.numero %}" class="btn btn-primary btn-sm">Ver Detalle</a>
+                            <a href="{% url 'detalle_faltante' orden.numero %}" class="btn btn-primary btn-sm">Ver Faltantes</a>
                         </td>
                     </tr>
                 {% endif %}

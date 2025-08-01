@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle de Orden de Compra #{{ orden.numero }}</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
+            <div class="d-flex align-items-center">
+                <p class="me-5"><strong>Estado:</strong> {{ orden.estado }}</p>
+            </div>
+            <p><strong>Usuario:</strong> {{ orden.usuario.nombre }} {{ orden.usuario.apellido }}</p>
+            <p><strong>Rol:</strong> {{ orden.usuario.rol }}</p>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Proveedor</th>
+                    <th>RUT Empresa</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total Producto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in orden.items.all %}
+                <tr>
+                    <td>{{ item.producto.codigo }}</td>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.producto.proveedor.nombre }}</td>
+                    <td>{{ item.producto.proveedor.rut_empresa }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.precio_unitario|floatformat:0 }}</td>
+                    <td>${{ item.total_producto|floatformat:0 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6" class="text-end">Total General:</th>
+                    <th>${{ orden.total_general|floatformat:0 }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <a href="{% url 'recibidos' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
+</div>
+{% endblock %}

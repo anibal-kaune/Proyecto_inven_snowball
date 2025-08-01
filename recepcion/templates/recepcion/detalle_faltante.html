@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Faltantes - Orden #{{ orden.numero }}</h2>
+
+    <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
+    <p><strong>Estado:</strong> {{ orden.estado }}</p>
+    <p><strong>Usuario:</strong> {{ orden.usuario.nombre }}</p>
+
+    <h4 class="mt-4">Productos con Faltantes</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad solicitada</th>
+                <th>Cantidad recibida</th>
+                <th>Cantidad faltante</th>
+                <th>Proveedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in faltantes %}
+                <tr>
+                    <td>{{ f.producto.nombre }}</td>
+                    <td>{{ f.cantidad_solicitada }}</td>
+                    <td>{{ f.cantidad_recibida }}</td>
+                    <td>{{ f.cantidad_faltante }}</td>
+                    <td>{{ f.producto.proveedor.nombre }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No se han reportado faltantes para esta orden.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4 d-flex gap-2">
+        <form action="{% url 'confirmar_recepcion_faltante' orden.numero %}" method="POST" onsubmit="return confirm('¿Estás seguro de marcar esta orden como Recibida? Se eliminarán los reportes de faltantes.')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Marcar como Recibida</button>
+        </form>
+        <a href="{% url 'faltantes' %}" class="btn btn-secondary">Volver</a>
+    </div>
+    
+</div>
+{% endblock %}

@@ -4,7 +4,10 @@ from productos.models import Producto
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.contrib import messages
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
+from xhtml2pdf import pisa
+import tempfile
+from django.template.loader import get_template
 
 @login_required
 def lista_ordenes(request):
@@ -81,3 +84,18 @@ def cambiar_estado_orden(request, orden_id):
             messages.error(request, "Estado no permitido.")
 
     return redirect('lista_ordenes')
+
+#generar PDF
+def generar_pdf_orden(request, orden_id):
+    orden = get_object_or_404(OrdenCompra, pk=orden_id)
+    template = get_template('ordenes/pdf_orden.html')
+    html = template.render({'orden': orden})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Orden_{orden.numero}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=500)
+    return response

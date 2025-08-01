@@ -2,29 +2,62 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Reportar Faltante - Orden #{{ orden.numero }}</h2>
+    <h2>Reportar Faltantes - Orden #{{ orden.numero }}</h2>
 
-    <form method="post" class="mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
         {% csrf_token %}
-        <div class="mb-3">
-            <label for="producto" class="form-label">Producto</label>
-            <select name="producto" id="producto" class="form-select" required>
-                <option value="">Seleccione un producto</option>
+        <table class="table table-bordered" id="tabla-productos">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad Solicitada</th>
+                    <th>Cantidad Recibida</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="productos-body">
                 {% for item in productos_en_orden %}
-                    <option value="{{ item.producto.id }}">{{ item.producto.nombre }} (Solicitado: {{ item.cantidad }})</option>
+                <tr>
+                    <td>
+                        <select name="producto_id[]" class="form-control" required>
+                            <option value="{{ item.producto.id }}">
+                                {{ item.producto.codigo }} - {{ item.producto.nombre }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>
+                        <input type="number" name="cantidad_recibida[]" class="form-control" min="0" max="{{ item.cantidad }}" required>
+                    </td>
+                    <td><button type="button" class="btn btn-danger btn-sm eliminar-fila">Eliminar</button></td>
+                </tr>
                 {% endfor %}
-            </select>
-        </div>
+            </tbody>
+        </table>
 
-        <div class="mb-3">
-            <label for="cantidad_recibida" class="form-label">Cantidad Recibida</label>
-            <input type="number" name="cantidad_recibida" id="cantidad_recibida" class="form-control" min="0" required>
-        </div>
-
-        <button type="submit" class="btn btn-warning"
-                onclick="return confirm('¿Confirmas que hubo faltante en la recepción?')">Registrar Faltante</button>
-
-        <a href="{% url 'detalle_recepcion' orden.numero %}" class="btn btn-secondary">Volver</a>
+        <button type="submit" class="btn btn-success">Registrar Faltantes</button>
+        <a href="{% url 'recepcion' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tablaBody = document.getElementById('productos-body');
+
+    tablaBody.addEventListener('click', function (e) {
+        if (e.target.classList.contains('eliminar-fila')) {
+            const fila = e.target.closest('tr');
+            if (tablaBody.rows.length > 1) {
+                fila.remove();
+            }
+        }
+    });
+});
+</script>
 {% endblock %}
