@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 text-center">
     <h2>¿Eliminar marca "{{ marca.nombre }}"?</h2>
-    <form method="POST">
+    <form method="POST" class="form-eliminar d-inline">
         {% csrf_token %}
-        <button class="btn btn-danger" type="submit">Eliminar</button>
+        <!--<button class="btn btn-danger" type="submit">Eliminar</button>-->
+        <button type="submit" class="btn btn-danger eliminar-btn">Eliminar</button>
         <a href="{% url 'listar_marcas' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

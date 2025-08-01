@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 text-center">
     <h2>¿Eliminar proveedor "{{ proveedor.nombre }}"?</h2>
-    <form method="POST">
+    <table class="table table-bordered table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th><th>RUT</th><th>Dirección</th><th>Correo</th><th>Teléfono</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ proveedor.nombre }}</td>
+                    <td>{{ proveedor.rut_empresa }}</td>
+                    <td>{{ proveedor.direccion }}</td>
+                    <td>{{ proveedor.correo }}</td>
+                    <td>{{ proveedor.telefono }}</td>
+                </tr>
+            </tbody>
+        </table>
+    <form method="POST" class="form-eliminar d-inline">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <button type="submit" class="btn btn-danger eliminar-btn">Eliminar</button>
         <a href="{% url 'proveedor_list' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

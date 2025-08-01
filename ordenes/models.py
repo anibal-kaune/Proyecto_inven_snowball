@@ -9,6 +9,7 @@ class OrdenCompra(models.Model):
         ('Aprobada', 'Aprobada'),
         ('Cancelada', 'Cancelada'),
         ('Recibida', 'Recibida'),
+        ('Faltante', 'Faltante'),
     ]
 
     numero = models.AutoField(primary_key=True)

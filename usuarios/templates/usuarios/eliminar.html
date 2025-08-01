@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 text-center">
     <h2>¿Eliminar usuario {{ usuario.nombre }} {{ usuario.apellido }}?</h2>
-    <form method="POST">
+    <table class="table table-bordered table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th><th>Email</th><th>RUT</th><th>Teléfono</th><th>Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.rut }}</td>
+                    <td>{{ usuario.telefono }}</td>
+                    <td>{{ usuario.rol }}</td>
+                </tr>
+            </tbody>
+        </table>
+    <form method="POST" class="form-eliminar d-inline">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <button type="submit" class="btn btn-danger eliminar-btn">Eliminar</button>
         <a href="{% url 'listar_usuarios' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
