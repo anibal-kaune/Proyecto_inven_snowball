@@ -88,3 +88,9 @@ def reportar_faltante(request, orden_id):
 def recibidos(request):
     ordenes_recibidas = OrdenCompra.objects.filter(estado__in=['Recibida'])
     return render(request, 'recepcion/recibidos.html', {'ordenes': ordenes_recibidas})
+
+#faltantes
+@login_required
+def faltantes(request):
+    ordenes_faltantes = OrdenCompra.objects.filter(estado__in=['Faltante'])
+    return render(request, 'recepcion/faltantes.html', {'ordenes': ordenes_faltantes})

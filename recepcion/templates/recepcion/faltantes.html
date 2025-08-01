@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Órdenes Recibidas</h2>
+    <h2>Órdenes Faltantes</h2>
     <div>
         <div class="btn-group mt-3 mb-3" role="group" aria-label="Basic mixed styles example">
             <a href="{% url 'recepcion' %}" class="btn btn-primary">Pendientes</a>
@@ -35,7 +35,7 @@
                 {% endif %}
             {% empty %}
                 <tr>
-                    <td colspan="5">No hay órdenes recibidas.</td>
+                    <td colspan="5">No hay órdenes con faltantes.</td>
                 </tr>
             {% endfor %}
         </tbody>

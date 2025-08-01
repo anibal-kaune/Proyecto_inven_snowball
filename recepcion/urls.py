@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:orden_id>/faltante/', views.reportar_faltante, name='reportar_faltante'),
 
     path('recibidos/', views.recibidos, name='recibidos'),
+    path('faltantes/', views.faltantes, name='faltantes'),
 ]
