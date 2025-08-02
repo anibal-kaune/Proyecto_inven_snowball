@@ -79,7 +79,7 @@
             <div class="d-flex align-items-center">
                 <!-- Botón menú para móviles -->
                 <button class="btn btn-outline-light d-md-none me-2" id="menu-toggle">☰</button>
-                <a class="navbar-brand" href="/"><h4 class="text-light mb-0">Inventario Snowball</h4></a>
+                <a class="navbar-brand" href="{% url 'index' %}"><h4 class="text-light mb-0">Inventario Snowball</h4></a>
             </div>
             <ul class="navbar-nav d-flex flex-row align-items-center">
                 {% if user.is_authenticated %}

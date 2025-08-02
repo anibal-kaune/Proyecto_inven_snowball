@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import RegistroUsuarioForm, LoginForm
 from usuarios.models import Usuario
+from productos.models import Producto
+from django.db.models import F
+from ordenes.models import OrdenCompra
 
 def es_supervisor(user):
     return user.rol == 'supervisor'
@@ -44,6 +47,13 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-#@login_required
+@login_required
 def index(request):
-    return render(request, 'index.html')
+    productos_bajo_minimo = Producto.objects.filter(stock__lt=F('cantidad_minima'))
+    ultimas_ordenes = OrdenCompra.objects.select_related('usuario').order_by('-fecha')[:10]  # las 10 más recientes
+
+    return render(request, 'inicio/index.html', {
+        'user': request.user,
+        'productos_bajo_minimo': productos_bajo_minimo,
+        'ultimas_ordenes': ultimas_ordenes,
+    })

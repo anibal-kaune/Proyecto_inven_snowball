@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">Bienvenido al sistema, {{ user.nombre }}</h2>
+      <hr class="w-50 mx-auto">
+    </div>
+
+    <!-- Productos con Stock Bajo -->
+    <div class="mb-5">
+      <h4 class="mb-3 text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Productos con Stock Bajo el Mínimo</h4>
+
+      {% if productos_bajo_minimo %}
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover table-sm align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Cantidad Mínima</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for producto in productos_bajo_minimo %}
+              <tr class="{% if producto.stock == 0 %}table-danger{% elif producto.stock < producto.cantidad_minima %}table-warning{% endif %}">
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.stock }}</td>
+                <td>{{ producto.cantidad_minima }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          No hay productos con stock bajo el mínimo.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Últimas Órdenes de Compra -->
+    <div>
+      <h4 class="mb-3 text-primary"><i class="bi bi-cart-check me-2"></i>Últimas Órdenes de Compra</h4>
+
+      {% if ultimas_ordenes %}
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover table-sm align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">N° Orden</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for orden in ultimas_ordenes %}
+              <tr>
+                <td>{{ orden.numero }}</td>
+                <td>{{ orden.fecha }}</td>
+                <td>{{ orden.usuario.nombre }}</td>
+                <td>
+                  {% if orden.estado == "Pendiente" %}
+                    <span class="badge bg-warning text-dark">{{ orden.estado }}</span>
+                  {% elif orden.estado == "Aprobada" %}
+                    <span class="badge bg-success">{{ orden.estado }}</span>
+                  {% elif orden.estado == "Rechazada" %}
+                    <span class="badge bg-danger">{{ orden.estado }}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ orden.estado }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'detalle_orden' orden.numero %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye-fill me-1"></i>Ver Detalle
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          No hay órdenes de compra registradas.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
