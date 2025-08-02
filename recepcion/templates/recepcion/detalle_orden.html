@@ -29,11 +29,13 @@
     </table>
 
     <div class="mt-4">
+        {% if request.user.es_supervisor %}
         <a href="{% url 'confirmar_recepcion' orden.numero %}" class="btn btn-success"
            onclick="return confirm('¿Deseas confirmar la recepción y actualizar el stock?')">Confirmar Recepción</a>
 
         <a href="{% url 'reportar_faltante' orden.numero %}" class="btn btn-warning">Reportar Faltante</a>
-
+        {% endif %}
+        <a href="{% url 'generar_pdf_recibido' orden.numero %}" class="btn btn-primary me-2">Descargar PDF</a>
         <a href="{% url 'recepcion' %}" class="btn btn-secondary">Volver</a>
     </div>
 </div>

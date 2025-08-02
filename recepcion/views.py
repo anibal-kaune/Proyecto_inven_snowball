@@ -99,6 +99,21 @@ def reportar_faltante(request, orden_id):
         'productos_en_orden': productos_en_orden
     })
 
+#generar PDF
+def generar_pdf_recibido(request, orden_id):
+    orden = get_object_or_404(OrdenCompra, pk=orden_id)
+    template = get_template('recepcion/pdf_recibido.html')
+    html = template.render({'orden': orden})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Orden_{orden.numero}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=500)
+    return response
+
 #Recibidos
 
 @login_required

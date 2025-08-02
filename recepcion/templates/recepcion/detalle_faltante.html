@@ -37,10 +37,12 @@
     </table>
 
     <div class="mt-4 d-flex gap-2">
+        {% if request.user.es_supervisor %}
         <form action="{% url 'confirmar_recepcion_faltante' orden.numero %}" method="POST" onsubmit="return confirm('¿Estás seguro de marcar esta orden como Recibida? Se eliminarán los reportes de faltantes.')">
             {% csrf_token %}
             <button type="submit" class="btn btn-success me-2">Marcar como Recibida</button>
         </form>
+        {% endif %}
         <a href="{% url 'generar_pdf_faltante' orden.numero %}" class="btn btn-primary">Descargar PDF Faltantes</a>
         <a href="{% url 'faltantes' %}" class="btn btn-secondary">Volver</a>
     </div>
