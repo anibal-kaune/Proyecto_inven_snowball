@@ -3,73 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Sistema de Inventario{% endblock %}</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/26c4.png' %}" type="image/x-icon">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     
     <!-- Estilos -->
-    <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: row;
-        }
-
-        /* Sidebar fijo en pantallas grandes */
-        .sidebar {
-            width: 220px;
-            background-color: #343a40;
-            color: white;
-            padding: 1rem 0.5rem;
-            height: 100vh;
-            position: fixed;
-            top: 56px;
-            left: 0;
-            z-index: 1030;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-        }
-
-        .sidebar a:hover {
-            background-color: #495057;
-        }
-
-        .content {
-            margin-left: 220px;
-            padding: 1rem;
-            width: 100%;
-        }
-
-        /* Sidebar oculto en móviles */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                top: 56px;
-                left: -220px;
-                transition: all 0.3s;
-            }
-
-            .sidebar.show {
-                left: 0;
-            }
-
-            .content {
-                margin-left: 0;
-                padding-top: 1rem;
-            }
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
 <body>
 
@@ -79,7 +22,11 @@
             <div class="d-flex align-items-center">
                 <!-- Botón menú para móviles -->
                 <button class="btn btn-outline-light d-md-none me-2" id="menu-toggle">☰</button>
-                <a class="navbar-brand" href="{% url 'index' %}"><h4 class="text-light mb-0">Inventario Snowball</h4></a>
+                <div class="d-flex align-items-center">
+                    <img src="{% static 'img/26c4.png' %}" alt="Logo" style="height: 40px; margin-right: 10px;">
+                    <a class="navbar-brand" href="{% url 'index' %}"><h4 class="text-light mb-0">Inventario Snowball</h4></a>
+                </div>
+                
             </div>
             <ul class="navbar-nav d-flex flex-row align-items-center">
                 {% if user.is_authenticated %}
@@ -124,13 +71,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Script para toggle del sidebar en móviles -->
-    <script>
-        const toggleButton = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('show');
-        });
-    </script>
+    
     {% if messages %}
     <script>
         {% for message in messages %}
@@ -143,31 +84,7 @@
         {% endfor %}
     </script>
     {% endif %}
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const forms = document.querySelectorAll('.form-eliminar');
-
-        forms.forEach(form => {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();  // Evita el envío inmediato del formulario
-
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "¡Esta acción no se puede deshacer!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();  // Envía el formulario si se confirma
-                    }
-                });
-            });
-        });
-    });
-    </script>
+    {% load static %}
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
